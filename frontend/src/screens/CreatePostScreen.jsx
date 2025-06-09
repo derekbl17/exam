@@ -4,7 +4,6 @@ import CreatePostForm from "../components/CreatePostForm";
 const CreatePostScreen = () => {
   return (
     <div>
-      <h1>create post screen</h1>
       <CreatePostForm />
     </div>
   );

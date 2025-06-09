@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,9 +14,8 @@ import AdminScreen from "./screens/AdminScreen.jsx";
 import NotFoundScreen from "./screens/NotFoundScreen.jsx";
 import NoAuthorization from "./screens/NoAuthorization.jsx";
 import CreatePostScreen from "./screens/CreatePostScreen.jsx";
-import LikesScreen from "./screens/LikesScreen.jsx";
 import MyPosts from "./screens/MyPosts.jsx";
-import BlockedPosts from "./screens/AdminBlockedPosts.jsx";
+
 
 const queryClient = new QueryClient();
 
@@ -35,9 +33,8 @@ const router = createBrowserRouter([
         element: <PrivateRoute allowed={["user", "admin"]} />,
         children: [
           { path: "profile", element: <ProfileScreen /> },
-          { path: "new-post", element: <CreatePostScreen /> },
-          { path: "liked", element: <LikesScreen /> },
-          { path: "my-posts", element: <MyPosts /> },
+          { path: "new-question", element: <CreatePostScreen /> },
+          { path: "my-questions", element: <MyPosts /> },
         ],
       },
       {
@@ -45,7 +42,6 @@ const router = createBrowserRouter([
         element: <PrivateRoute allowed={["admin"]} />,
         children: [
           { path: "panel", element: <AdminScreen /> },
-          { path: "blocked", element: <BlockedPosts /> },
         ],
       },
       { path: "*", element: <NotFoundScreen /> },

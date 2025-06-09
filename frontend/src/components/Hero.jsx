@@ -8,7 +8,7 @@ const Hero = () => {
         <Card className="p-5 d-flex flex-column align-items-center hero-card bg-secondary w-75 text-light">
           <h1 className="text-center mb-4">Poster</h1>
           <p className="text-center mb-4">
-            You must be logged in to view posts
+            You must be logged in to view questions
           </p>
           <div className="d-flex">
             <Button variant="primary" as={Link} to="/login" className="me-3">

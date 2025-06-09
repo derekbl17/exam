@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
-import { Form, Button, Alert, Spinner, Row, Col } from "react-bootstrap";
+import { useState } from "react";
+import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useCreatePostMutation } from "../api/post";
-import { useCategoriesQuery } from "../api/category";
 import { toast } from "react-toastify";
 
 const CreatePostForm = () => {
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
-    imageUrl: "",
-    price: "",
-    category: "",
+    content: "",
   });
 
   const {
@@ -20,17 +16,6 @@ const CreatePostForm = () => {
     error,
     isSuccess,
   } = useCreatePostMutation();
-
-  const {
-    data: categories,
-    isLoading: isCategoriesLoading,
-    isError: isCategoriesError,
-    error: categoriesError,
-  } = useCategoriesQuery();
-
-  // Fetch categories
-
-  // Post creation mutation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,10 +28,7 @@ const CreatePostForm = () => {
       onSuccess: () => {
         setFormData({
           title: "",
-          description: "",
-          imageUrl: "",
-          price: "",
-          category: "",
+          content: "",
         });
         toast.success("Post created!");
       },
@@ -82,86 +64,29 @@ const CreatePostForm = () => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Description</Form.Label>
+        <Form.Label>Details</Form.Label>
         <Form.Control
           as="textarea"
           rows={3}
-          name="description"
-          value={formData.description}
+          name="content"
+          value={formData.content}
           onChange={handleChange}
           required
           maxLength={500}
         />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Price eur</Form.Label>
-        <Form.Control
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          required
-          maxLength={500}
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Image URL</Form.Label>
-        <Form.Control
-          type="url"
-          name="imageUrl"
-          value={formData.imageUrl}
-          onChange={handleChange}
-          required
-          placeholder="https://example.com/image.jpg"
-        />
-        <Form.Text>Must be a valid image URL (jpg, png, etc.)</Form.Text>
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Category</Form.Label>
-        {isCategoriesLoading ? (
-          <Row>
-            <Col xs="auto">
-              <Spinner size="sm" animation="border" />
-            </Col>
-            <Col>Loading categories...</Col>
-          </Row>
-        ) : (
-          <Form.Select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            disabled={isCategoriesError}
-          >
-            <option value="">Select a category</option>
-            {categories?.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </Form.Select>
-        )}
-        {isCategoriesError && (
-          <Form.Text className="text-danger">
-            Couldn't load categories. Please refresh the page.
-          </Form.Text>
-        )}
       </Form.Group>
 
       <Button
         type="submit"
         variant="primary"
-        disabled={isLoading || isCategoriesError}
+        disabled={isLoading}
       >
         {isLoading ? (
           <>
             <Spinner as="span" size="sm" animation="border" /> Creating...
           </>
         ) : (
-          "Create Post"
+          "Post question"
         )}
       </Button>
     </Form>

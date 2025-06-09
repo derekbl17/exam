@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown, Badge } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import {
   FaSignInAlt,
   FaSignOutAlt,
@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
-import PosterImg from "../assets/Poster.png";
 
 export default function Header() {
   const { logout, user } = useAuth();
@@ -27,65 +26,6 @@ export default function Header() {
   };
 
   return (
-    // <header>
-    //   <Navbar bg="primary" variant="dark" expand="lg" collapseOnSelect>
-    //     <Container>
-    //       <Navbar.Brand as={NavLink} to="/">
-    //         <img src={PosterImg} alt="Poster" />
-    //       </Navbar.Brand>
-    //       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    //       <Navbar.Collapse id="basic-navbar-nav">
-    //         <Nav className="ms-auto">
-    //           {user ? (
-    //             <>
-    //               <Nav.Link as={NavLink} to="/new-post">
-    //                 New post
-    //               </Nav.Link>
-    //               <Nav.Link as={NavLink} to="/my-posts">
-    //                 My Posts
-    //               </Nav.Link>
-    //               <Nav.Link as={NavLink} to="/liked">
-    //                 Liked posts
-    //               </Nav.Link>
-    //               <NavDropdown
-    //                 title={user.name}
-    //                 id="username"
-    //                 align="end"
-    //                 className="hover-bg-primary-dark"
-    //               >
-    //                 {user.role === "admin" && (
-    //                   <>
-    //                     <NavDropdown.Item as={NavLink} to="/admin/panel">
-    //                       Admin Panel
-    //                     </NavDropdown.Item>
-    //                     <NavDropdown.Item as={NavLink} to="/admin/blocked">
-    //                       Blocked Posts
-    //                     </NavDropdown.Item>
-    //                   </>
-    //                 )}
-    //                 <NavDropdown.Item as={NavLink} to="/profile">
-    //                   Profile
-    //                 </NavDropdown.Item>
-    //                 <NavDropdown.Item onClick={logoutHandler}>
-    //                   Logout
-    //                 </NavDropdown.Item>
-    //               </NavDropdown>
-    //             </>
-    //           ) : (
-    //             <>
-    //               <Nav.Link as={NavLink} to="/login">
-    //                 <FaSignInAlt /> Sign In
-    //               </Nav.Link>
-    //               <Nav.Link as={NavLink} to="/register">
-    //                 <FaSignOutAlt /> Sign up
-    //               </Nav.Link>
-    //             </>
-    //           )}
-    //         </Nav>
-    //       </Navbar.Collapse>
-    //     </Container>
-    //   </Navbar>
-    // </header>
     <header>
       <Navbar bg="primary" variant="dark" expand="lg" collapseOnSelect>
         <Container>
@@ -94,11 +34,7 @@ export default function Header() {
             to="/"
             className="d-flex align-items-center"
           >
-            <img
-              src={PosterImg}
-              alt="Poster"
-              style={{ height: "40px" }} // Control image size
-            />
+            <h1 className="">Help desk</h1>
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="main-navbar" />
@@ -109,28 +45,19 @@ export default function Header() {
                 <>
                   <Nav.Link
                     as={NavLink}
-                    to="/new-post"
+                    to="/new-question"
                     className="px-3 py-2 hover-bg-primary-dark"
                   >
-                    New Post
+                    New Question
                   </Nav.Link>
 
                   <Nav.Link
                     as={NavLink}
-                    to="/my-posts"
+                    to="/my-questions"
                     className="px-3 py-2 hover-bg-primary-dark"
                   >
-                    My Posts
+                    My Questions
                   </Nav.Link>
-
-                  <Nav.Link
-                    as={NavLink}
-                    to="/liked"
-                    className="px-3 py-2 hover-bg-primary-dark"
-                  >
-                    Liked Posts
-                  </Nav.Link>
-
                   <NavDropdown
                     title={
                       <>
@@ -149,13 +76,6 @@ export default function Header() {
                           className="dropdown-item-hover"
                         >
                           <FaCog /> Admin Panel
-                        </NavDropdown.Item>
-                        <NavDropdown.Item
-                          as={NavLink}
-                          to="/admin/blocked"
-                          className="dropdown-item-hover"
-                        >
-                          <FaBan /> Blocked Posts
                         </NavDropdown.Item>
                       </>
                     )}

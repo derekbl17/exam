@@ -1,9 +1,6 @@
+# EXAM help desk app
 
-# Poster App with vite+react+mongodb+tanstack+jwt cookie auth
-
-This is an app made for users to make posts regarding goods they'd like to sell, or view posts of other people and inquire about purchasing their goods.
-
-
+Exams help desk app
 
 ## Environment Variables
 
@@ -16,7 +13,6 @@ To run this project, you will need to add the following environment variables to
 `MONGO_URI`
 
 `JWT_SECRET`
-
 
 ## Build and run
 

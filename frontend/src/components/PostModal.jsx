@@ -4,16 +4,17 @@ import { useAuth } from "../context/authContext";
 import {
   useDeletePostMutation,
   useEditPostMutation,
-  useModeratePostMutation,
+  useModeratePostMutation
 } from "../api/post";
 import { toast } from "react-toastify";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
+  useLikeCommentMutation
 } from "../api/comment";
 import Swal from "sweetalert2";
 
-const PostModal = ({ show, onHide, post, img }) => {
+const PostModal = ({ show, onHide, post }) => {
   const { user } = useAuth();
   const isAuthor = user?._id === post?.author?._id;
 
@@ -24,15 +25,13 @@ const PostModal = ({ show, onHide, post, img }) => {
   const { mutateAsync: updatePost } = useEditPostMutation();
   const { mutateAsync: deletePost } = useDeletePostMutation();
   const { mutateAsync: moderatePost } = useModeratePostMutation();
+  const { mutateAsync: likeComment } = useLikeCommentMutation();
   const [isEditing, setIsEditing] = useState(false);
 
   const [editedData, setEditedData] = useState({
     postId: post._id,
     title: post.title,
-    description: post.description,
-    imageUrl: post.imageUrl,
-    price: parseFloat(post.price?.$numberDecimal).toFixed(2) || 0,
-    category: post.category,
+    content: post.content,
   });
 
   const handleDeleteComment = async (commentId) => {
@@ -40,8 +39,31 @@ const PostModal = ({ show, onHide, post, img }) => {
       onSuccess: () => {
         toast.success("comment removed");
       },
+      onError: (err) => {
+        toast.error()
+      }
     });
   };
+
+  const handleLikeComment = async (commentId) => {
+    likeComment(commentId, {
+      onSuccess: () => {
+        toast.success("Like status changed");
+      },
+      onError: (err) => {
+        toast.error(err.response.data.message || "error liking post")
+      }
+
+    });
+  }
+
+  const moderatePostHandler = async (action) => {
+    moderatePost({ postId: post._id, action: action }, {
+      onSuccess: () => {
+        toast.success("success")
+      }
+    })
+  }
 
   const handleCommentSubmit = async () => {
     if (!commentContent.trim()) {
@@ -56,9 +78,8 @@ const PostModal = ({ show, onHide, post, img }) => {
       });
       toast.success("Comment added successfully");
       setCommentContent("");
-      // You might want to refresh comments here or use optimistic updates
-    } catch (error) {
-      toast.error("Failed to add comment");
+    } catch (err) {
+      toast.error("Failed to like");
     }
   };
 
@@ -79,14 +100,6 @@ const PostModal = ({ show, onHide, post, img }) => {
     }
   };
 
-  const moderatePostHandler = async () => {
-    moderatePost(post._id, {
-      onSuccess: () => {
-        toast.success("moderated");
-      },
-    });
-  };
-
   const handleChange = (field, value) => {
     setEditedData((prev) => ({ ...prev, [field]: value }));
   };
@@ -104,21 +117,13 @@ const PostModal = ({ show, onHide, post, img }) => {
     });
   };
 
+
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>{isEditing ? "Edit Post" : post.title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <img src={img} alt={post.title} className="img-fluid rounded mb-3" />
-
-        <div className="mb-3">
-          <Badge bg="secondary" className="me-2">
-            {post.category?.name || "Uncategorized"}
-          </Badge>
-          <Badge bg="info">{post.likes?.length || 0} Likes</Badge>
-        </div>
-
         {isEditing ? (
           <Form>
             <Form.Group className="mb-3">
@@ -131,31 +136,12 @@ const PostModal = ({ show, onHide, post, img }) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Content</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={4}
-                value={editedData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Image URL</Form.Label>
-              <Form.Control
-                type="text"
-                value={editedData.imageUrl}
-                onChange={(e) => handleChange("imageUrl", e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Price</Form.Label>
-              <Form.Control
-                type="number"
-                step="0.01"
-                value={editedData.price}
-                onChange={(e) => handleChange("price", e.target.value)}
+                value={editedData.content}
+                onChange={(e) => handleChange("content", e.target.value)}
               />
             </Form.Group>
 
@@ -172,8 +158,7 @@ const PostModal = ({ show, onHide, post, img }) => {
           </Form>
         ) : (
           <>
-            <p>{parseFloat(post.price?.$numberDecimal).toFixed(2)} eur</p>
-            <p>{post.description}</p>
+            <p>{post.content}</p>
             {(isAuthor || user.role === "admin") && (
               <>
                 <Button
@@ -182,41 +167,35 @@ const PostModal = ({ show, onHide, post, img }) => {
                 >
                   Edit Post
                 </Button>
-                <Button variant="outline-primary" onClick={deletePostHandler}>
+                <Button variant="outline-danger" onClick={deletePostHandler}>
                   Delete post
                 </Button>
               </>
             )}
-            {user.role === "admin" && (
-              <Button
-                variant={
-                  post.status === "active"
-                    ? "outline-danger"
-                    : "outline-warning"
-                }
-                onClick={moderatePostHandler}
-              >
-                {post.status === "active" ? "Block post" : "Unblock post"}
-              </Button>
+            {user.role === "admin" && (<>
+              {post.status !== "active" && <Button variant="outline-success" onClick={() => moderatePostHandler("active")}>Active</Button>}
+              {post.status !== "closed" && <Button variant="dark" onClick={() => moderatePostHandler("close")}>Close</Button>}
+            </>
+
             )}
             {/* Comments Section */}
-            {post.status === "active" && (
-              <div className="mt-4">
-                <h5>Comments</h5>
 
-                {/* Comments List */}
-                {post.comments?.length > 0 ? (
-                  <ListGroup className="mb-3">
-                    {post.comments.map((comment) => (
-                      <ListGroup.Item key={comment._id}>
-                        <div className="d-flex justify-content-between align-items-center mb-1">
-                          <div className="d-flex align-items-center">
-                            <strong className="me-2">
-                              {comment.author?.name || "Anonymous"}
-                            </strong>
-                            {(user?._id === comment.author?._id ||
-                              isAuthor ||
-                              user.role === "admin") && (
+            <div className="mt-4">
+              <h5>Answers</h5>
+
+              {/* Comments List */}
+              {post.comments?.length > 0 ? (
+                <ListGroup className="mb-3">
+                  {post.comments.map((comment) => (
+                    <ListGroup.Item key={comment._id}>
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <div className="d-flex align-items-center">
+                          <strong className="me-2">
+                            {comment.author?.name || "Anonymous"}
+                          </strong>
+                          <Badge className="bg-success">{comment.likes.length}</Badge>
+                          {(
+                            user.role === "admin") && (
                               <Button
                                 variant="outline-danger"
                                 size="sm"
@@ -226,39 +205,54 @@ const PostModal = ({ show, onHide, post, img }) => {
                                 Delete
                               </Button>
                             )}
-                          </div>
-                          <small className="text-muted">
-                            {new Date(comment.createdAt).toLocaleString()}
-                          </small>
-                        </div>
-                        <p className="mb-0">{comment.content}</p>
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-                ) : (
-                  <p className="text-muted">No comments yet</p>
-                )}
+                          {comment.likes.includes(user._id) ? <Button
+                            variant="outline-warning"
+                            size="sm"
+                            onClick={() => handleLikeComment(comment._id)}
+                            className="py-0 px-1"
+                          >
+                            Unlike
+                          </Button> : <Button
+                            variant="outline-warning"
+                            size="sm"
+                            onClick={() => handleLikeComment(comment._id)}
+                            className="py-0 px-1"
+                          >
+                            Like
+                          </Button>}
 
-                {/* Add Comment Form */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Add a comment</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={commentContent}
-                    onChange={(e) => setCommentContent(e.target.value)}
-                    placeholder="Write your comment here..."
-                  />
-                </Form.Group>
+                        </div>
+                        <small className="text-muted">
+                          {new Date(comment.createdAt).toLocaleString()}
+                        </small>
+                      </div>
+                      <p className="mb-0">{comment.content}</p>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              ) : (
+                <p className="text-muted">No answers yet</p>
+              )}
+
+              {/* Add Answer Form */}
+              {user.role === "admin" && <><Form.Group className="mb-3">
+                <Form.Label>Answer</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                  placeholder="Write your answer here..."
+                />
+              </Form.Group>
                 <Button
                   variant="primary"
                   onClick={handleCommentSubmit}
                   disabled={!commentContent.trim()}
                 >
-                  Post Comment
-                </Button>
-              </div>
-            )}
+                  Post Answer
+                </Button></>}
+            </div>
           </>
         )}
       </Modal.Body>
