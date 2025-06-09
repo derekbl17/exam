@@ -1,0 +1,8 @@
+.hover-bg-primary-dark:hover {
+    background-color: var(--bs-primary-dark);
+    transition: background-color 0.2s ease;
+  }
+  .dropdown-item-hover:hover {
+    background-color: var(--bs-light);
+    color: var(--bs-dark);
+  }
