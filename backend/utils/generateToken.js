@@ -5,10 +5,25 @@ const generateToken=(res,userId,userRole)=>{
 
     res.cookie('jwt',token,{
         httpOnly:true,
-        secure: process.env.NODE_ENV !== 'development',
+        secure: true,
         sameSite: 'none',
         maxAge: 24 * 60 * 60 * 1000
     })
+
+    console.log('Cookie set:', {
+        name: 'jwt',
+        value: token,
+        options: {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none'
+        }
+    });
+    res.json({ 
+        message: 'Login successful', 
+        token: token,
+        cookieSet: true 
+    });
 }
 
 module.exports=generateToken
