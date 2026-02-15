@@ -8,7 +8,7 @@ export default defineConfig({
     port:3000, // sets which port front will run on
     proxy:{
       '/api':{
-        target:'http://localhost:5001',
+        target:'https://exam-pnbu.onrender.com',
         changeOrigin:true
       }
     }
