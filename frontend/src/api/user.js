@@ -3,6 +3,7 @@ import axios from "axios";
 const USERS_URL='https://exam-pnbu.onrender.com/api/users'
 
 export const loginUser = async (credentials) => {
+  console.log('hardcoded url: ', USERS_URL)
     const res = await fetch(`${USERS_URL}/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -14,10 +14,7 @@ const app = express();
 app.use(express.json()); // enables reading of data in request body if its in .json format
 app.use(cookieParser());
 
-app.use(cors({
-    origin: ['https://exam-hh8lwc6ke-derekbl17s-projects.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
-    credentials: true
-}));
+app.use(cors());
 
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
