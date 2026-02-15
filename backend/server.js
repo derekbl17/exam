@@ -1,5 +1,5 @@
-import cors from 'cors'
 const express = require('express');
+const cors = require('cors');
 const colors = require('colors');
 const dotenv = require('dotenv').config(); // any changes to .env require server restart
 const cookieParser = require('cookie-parser');
@@ -15,7 +15,7 @@ app.use(express.json()); // enables reading of data in request body if its in .j
 app.use(cookieParser());
 
 app.use(cors({
-    origin: ['https://exam-hh8lwc6ke-derekbl17s-projects.vercel.app', 'http://localhost:5173'],
+    origin: ['https://exam-hh8lwc6ke-derekbl17s-projects.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
     credentials: true
 }));
 
