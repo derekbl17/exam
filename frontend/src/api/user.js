@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-const USERS_URL='/api/users'
+const USERS_URL='https://exam-pnbu.onrender.com/api/users'
 
 export const loginUser = async (credentials) => {
     const res = await fetch(`${USERS_URL}/auth`, {
@@ -9,6 +9,7 @@ export const loginUser = async (credentials) => {
       body: JSON.stringify(credentials),
     });
     const data = await res.json();
+
 
     if (!res.ok) throw new Error(data.message || 'Login failed');
 
