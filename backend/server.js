@@ -1,3 +1,4 @@
+import cors from 'cors'
 const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv').config(); // any changes to .env require server restart
@@ -12,6 +13,11 @@ const app = express();
 
 app.use(express.json()); // enables reading of data in request body if its in .json format
 app.use(cookieParser());
+
+app.use(cors({
+    origin: ['https://exam-hh8lwc6ke-derekbl17s-projects.vercel.app', 'http://localhost:5173'],
+    credentials: true
+}));
 
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
