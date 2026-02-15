@@ -8,6 +8,7 @@ export const loginUser = async (credentials) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
+      credentials: 'include'
     });
     const data = await res.json();
 
@@ -29,6 +30,7 @@ export const loginUser = async (credentials) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
+      credentials: 'include'
     });
     if (!res.ok) throw new Error('Register failed');
     return res.json();
@@ -39,6 +41,7 @@ export const loginUser = async (credentials) => {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
+      credentials: 'include'
     });
     if (!res.ok) throw new Error('Update failed');
     return res.json();
