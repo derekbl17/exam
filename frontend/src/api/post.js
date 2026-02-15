@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+const URL='https://exam-pnbu.onrender.com/api/posts'
 
 export const createPost = async (postData) => {
-	const { data } = await axios.post('/api/posts', postData);
+	const { data } = await axios.post(`${URL}`, postData);
 	return data;
 };
 
@@ -13,7 +14,7 @@ export function useCreatePostMutation() {
 }
 
 export const getAllPosts = async () => {
-	const data = await axios.get('/api/posts/');
+	const data = await axios.get(`${URL}/`);
 	return data;
 };
 
@@ -28,7 +29,7 @@ export function useGetMyPostsQuery() {
 	return useQuery({
 		queryKey: ['myPosts'],
 		queryFn: async () => {
-			const data = axios.get('/api/posts/my-posts');
+			const data = axios.get(`${URL}/my-posts`);
 			return data;
 		},
 	});
@@ -39,7 +40,7 @@ export function useEditPostMutation() {
 	return useMutation({
 		mutationFn: async (postData) => {
 			const { data } = await axios.put(
-				`/api/posts/${postData.postId}`,
+				`${URL}/${postData.postId}`,
 				postData
 			);
 			return data;
@@ -54,7 +55,7 @@ export function useDeletePostMutation() {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async (postId) => {
-			const { data } = await axios.delete(`/api/posts/${postId}`);
+			const { data } = await axios.delete(`${URL}/${postId}`);
 			return data;
 		},
 		onSuccess: () => {
@@ -68,7 +69,7 @@ export function useModeratePostMutation() {
 	return useMutation({
 		mutationFn: async ({ postId, action }) => {
 			console.log('id: ', postId, 'action:', action);
-			const { data } = await axios.patch(`/api/posts/${action}/${postId}`);
+			const { data } = await axios.patch(`${URL}/${action}/${postId}`);
 			return data;
 		},
 		onSuccess: () => {

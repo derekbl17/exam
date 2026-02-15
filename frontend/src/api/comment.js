@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+const URL='https://exam-pnbu.onrender.com/api/comments'
 
 export function useCreateCommentMutation() {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async ({ postId, content }) => {
-			const data = await axios.post(`/api/comments/${postId}`, { content });
+			const data = await axios.post(`${URL}/${postId}`, { content });
 			return data.data;
 		},
 		onSuccess: () => {
@@ -25,7 +26,7 @@ export function useDeleteCommentMutation() {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: async (commentId) => {
-			const res = await axios.delete(`/api/comments/${commentId}`);
+			const res = await axios.delete(`${URL}/${commentId}`);
 			return res;
 		},
 		onSuccess: () => {
@@ -39,7 +40,7 @@ export function useLikeCommentMutation() {
 
 	return useMutation({
 		mutationFn: async (postId) => {
-			const response = await axios.patch(`/api/comments/${postId}/like`);
+			const response = await axios.patch(`${URL}/${postId}/like`);
 			return {
 				postId,
 				...response.data,
