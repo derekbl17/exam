@@ -10,15 +10,6 @@ const generateToken=(res,userId,userRole)=>{
         maxAge: 24 * 60 * 60 * 1000
     })
 
-    console.log('Cookie set:', {
-        name: 'jwt',
-        value: token,
-        options: {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        }
-    });
     res.json({ 
         message: 'Login successful', 
         token: token,
