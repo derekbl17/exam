@@ -15,7 +15,6 @@ app.use(express.json()); // enables reading of data in request body if its in .j
 app.use(cookieParser());
 
 app.use(cors());
-app.options('*', cors());
 
 app.use('/api/posts', require('./routes/postRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
