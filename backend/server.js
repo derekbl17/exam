@@ -15,7 +15,7 @@ app.use(express.json()); // enables reading of data in request body if its in .j
 app.use(cookieParser());
 
 app.use(cors({
-    origin: 'https://exam-puce-xi.vercel.app',
+    origin: 'https://exam-puce-xi.vercel.app', // can you please not
     credentials: true, // ABSOLUTELY CRITICAL for cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
