@@ -14,9 +14,7 @@ const app = express();
 app.use(express.json()); // enables reading of data in request body if its in .json format
 app.use(cookieParser());
 
-app.use(cors({
-    credentials:true
-}));
+app.use(cors());
 app.options('*', cors());
 
 app.use('/api/posts', require('./routes/postRoutes'));
